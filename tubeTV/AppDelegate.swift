@@ -8,14 +8,51 @@
 
 import UIKit
 import CoreData
+import GoogleMobileAds
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    let currentYear = Calendar.current.component(.year, from: Date())
+    let currentMonth = Calendar.current.component(.month, from: Date())
+    let currentDay = Calendar.current.component(.day, from: Date())
+    let currentHour = Calendar.current.component(.hour, from: Date())
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        //將今天日期記錄下來
+        let date = UserDefaults.standard.string(forKey: "date")
+        let overSix = UserDefaults.standard.string(forKey: "overSix")
+        let today = "\(currentYear)\(dayToDay(day: currentMonth))\(dayToDay(day: currentDay))"
+        let today_Hour = today + "\(dayToDay(day: currentHour))"
+        
+        //let today = "20191112"
+        //let today_Hour = "2019111218"
+        //如果隔一天了，將廣告播放flg歸零並重設日期
+        if date != today {
+            UserDefaults.standard.set(today, forKey: "date")
+            UserDefaults.standard.set("0", forKey: "singer")
+            UserDefaults.standard.set("0", forKey: "favorite")
+            UserDefaults.standard.set("0", forKey: "overSix")
+        }
+        
+        //如果到18點重設flg並設定18點flg為1（廣告彈出）
+        if today_Hour >= today + "18"{
+            if overSix != "1"{
+                UserDefaults.standard.set("0", forKey: "singer")
+                UserDefaults.standard.set("0", forKey: "favorite")
+                UserDefaults.standard.set("1", forKey: "overSix")
+            }
+        }
+        
+        
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        Thread.sleep(forTimeInterval: 2.0)
+        SKStoreReviewController.requestReview()
+        
+        VersionManager.versionUpdate(ver: "1.0")
         // Override point for customization after application launch.
         return true
     }
@@ -26,12 +63,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        application.beginBackgroundTask(expirationHandler: {
+            application.endBackgroundTask(UIBackgroundTaskIdentifier.invalid)
+        })
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        let notificationName = Notification.Name(rawValue: "checkIfForeground")
+        NotificationCenter.default.post(name: notificationName, object: self, userInfo: [:])
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -88,6 +130,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+//    override func remoteControlReceived(with event: UIEvent?) {
+//        guard let event = event else { print("no event\n"); return }
+//        switch event.subtype {
+//        case UIEvent.EventSubtype.remoteControlPause:
+//            print("play")
+//        default:
+//            break
+//        }
+//    }
+    
+    
+    
+    
 
 }
 
