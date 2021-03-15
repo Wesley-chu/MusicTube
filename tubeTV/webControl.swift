@@ -95,16 +95,22 @@ func timeToNum(time:String) -> Int{
 
 
 
-func selectLyric(playLyric: Array<String>, myWebView:YTPlayerView, lyricTableView:UITableView){
-    var count = 0
-    for i in playLyric{
-        if Int(i.components(separatedBy: "_")[0]) == Int(myWebView.currentTime()){
-            lyricTableView.scrollToRow(at: IndexPath(row: count, section: 0), at: .middle, animated: true)
-            lyricTableView.selectRow(at: IndexPath(row: count, section: 0), animated: true, scrollPosition: .none)
-            
+func selectLyric(playLyric: Array<String>, myWebView:WKYTPlayerView, lyricTableView:UITableView){
+    //modify in 20201025 start
+    myWebView.getCurrentTime { (floatValue, error) in
+        if error == nil{
+            var count = 0
+            for i in playLyric{
+                if Int(i.components(separatedBy: "_")[0]) == Int(floatValue){
+                    lyricTableView.scrollToRow(at: IndexPath(row: count, section: 0), at: .middle, animated: true)
+                    lyricTableView.selectRow(at: IndexPath(row: count, section: 0), animated: true, scrollPosition: .none)
+                    
+                }
+                count += 1
+            }
         }
-        count += 1
     }
+    //modify in 20201025 end
 }
 
 func sliderTimeJumpToThatLyric(playLyric:Array<String>, sliderTime:Int, lyricTableView:UITableView){
@@ -128,7 +134,7 @@ func sliderTimeJumpToThatLyric(playLyric:Array<String>, sliderTime:Int, lyricTab
 }
 
 
-func clickToSeconds(myWebView:YTPlayerView, arrLyric:Array<String>, indexPath: IndexPath){
+func clickToSeconds(myWebView:WKYTPlayerView, arrLyric:Array<String>, indexPath: IndexPath){
     for countArr in 0 ... (arrLyric.count - 1){
         if countArr == indexPath.row{
             if let seconds = Float(arrLyric[countArr].components(separatedBy: "_")[0]){
@@ -209,7 +215,8 @@ extension UIColor {
     }
 }
 
-func coreDataSaveDelete(checkSaveDelete:String,videoId:String,title:String,time:String,lyric:String,imageURL:String){
+//modify 20201020 add "sentence"
+func coreDataSaveDelete(checkSaveDelete:String,videoId:String,title:String,time:String,lyric:String,imageURL:String,sentence:String){
     let appDel = UIApplication.shared.delegate as? AppDelegate
     guard let context = appDel?.persistentContainer.viewContext else{ return }
     if checkSaveDelete == "S"{
@@ -219,6 +226,7 @@ func coreDataSaveDelete(checkSaveDelete:String,videoId:String,title:String,time:
         aSongInfo.time = time
         aSongInfo.lyric = lyric
         aSongInfo.imageURL = imageURL
+        aSongInfo.sentence = sentence
         appDel?.saveContext()
     }else if checkSaveDelete == "D"{
         for check in coreDataQuery(){

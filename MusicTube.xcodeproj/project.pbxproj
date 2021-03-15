@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A37F04321CCC03800829128 /* YTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A37F04121CCC03800829128 /* YTPlayerView.m */; };
+		09C4BA7B2546DF550000517E /* WKYTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 09C4BA7A2546DF550000517E /* WKYTPlayerView.m */; };
 		0A37F04821CCC45800829128 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A37F04721CCC45800829128 /* Assets.bundle */; };
 		0A3A93FD2286D59100E50DB1 /* webControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3A93FC2286D59100E50DB1 /* webControl.swift */; };
 		0A3CD4E821CA852200B1CAB4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3CD4E721CA852200B1CAB4 /* AppDelegate.swift */; };
@@ -36,12 +36,13 @@
 		0AA53B1E23A10EEC00124B5F /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA53B1D23A10EEB00124B5F /* GoogleUtilities.framework */; };
 		0AA53B2023A10EF800124B5F /* nanopb.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA53B1F23A10EF800124B5F /* nanopb.framework */; };
 		0ACA2908235EFF2100AD2153 /* songInfoClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACA2907235EFF2100AD2153 /* songInfoClass.swift */; };
+		C1C8F82EF7E939DC263CA325 /* Pods_MusicTube.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FF008448A02E539ECB3AAD5 /* Pods_MusicTube.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0A37F04021CCC03600829128 /* tubeTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tubeTV-Bridging-Header.h"; sourceTree = "<group>"; };
-		0A37F04121CCC03800829128 /* YTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTPlayerView.m; sourceTree = "<group>"; };
-		0A37F04221CCC03800829128 /* YTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTPlayerView.h; sourceTree = "<group>"; };
+		09C4BA792546DF550000517E /* WKYTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKYTPlayerView.h; sourceTree = "<group>"; };
+		09C4BA7A2546DF550000517E /* WKYTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKYTPlayerView.m; sourceTree = "<group>"; };
+		09C4BA802546E0980000517E /* tubeTV-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "tubeTV-Bridging-Header.h"; sourceTree = "<group>"; };
 		0A37F04721CCC45800829128 /* Assets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Assets.bundle; sourceTree = "<group>"; };
 		0A3A93FC2286D59100E50DB1 /* webControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = webControl.swift; sourceTree = "<group>"; };
 		0A3CD4E421CA852200B1CAB4 /* MusicTube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicTube.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +74,9 @@
 		0AA53B1F23A10EF800124B5F /* nanopb.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = nanopb.framework; path = "tubeTV/GoogleMobileAdsSdkiOS-7.48.0/nanopb.framework"; sourceTree = "<group>"; };
 		0ACA2907235EFF2100AD2153 /* songInfoClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = songInfoClass.swift; sourceTree = "<group>"; };
 		0AD6A86922FD575F00310281 /* tubeTV.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = tubeTV.entitlements; sourceTree = "<group>"; };
+		5FF008448A02E539ECB3AAD5 /* Pods_MusicTube.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicTube.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2E93ABB815B6579DCECD171 /* Pods-MusicTube.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicTube.release.xcconfig"; path = "Target Support Files/Pods-MusicTube/Pods-MusicTube.release.xcconfig"; sourceTree = "<group>"; };
+		EE866340DEBA4DECAC2EE60B /* Pods-MusicTube.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicTube.debug.xcconfig"; path = "Target Support Files/Pods-MusicTube/Pods-MusicTube.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,7 @@
 				0AA53B1C23A10EDF00124B5F /* GoogleMobileAds.framework in Frameworks */,
 				0AA53B1A23A10ED300124B5F /* GoogleAppMeasurement.framework in Frameworks */,
 				0A53C4D8236ACD0C00D9B6CF /* CloudKit.framework in Frameworks */,
+				C1C8F82EF7E939DC263CA325 /* Pods_MusicTube.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +119,7 @@
 				0A3CD4E621CA852200B1CAB4 /* tubeTV */,
 				0A3CD4E521CA852200B1CAB4 /* Products */,
 				0ACA2902235EB83F00AD2153 /* Frameworks */,
+				A46B8951B06B70A96AEB553D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -140,11 +146,11 @@
 				0A3CD4F321CA852300B1CAB4 /* LaunchScreen.storyboard */,
 				0A3CD4F621CA852300B1CAB4 /* Info.plist */,
 				0A3CD4EE21CA852200B1CAB4 /* tubeTV.xcdatamodeld */,
-				0A37F04221CCC03800829128 /* YTPlayerView.h */,
-				0A37F04121CCC03800829128 /* YTPlayerView.m */,
-				0A37F04021CCC03600829128 /* tubeTV-Bridging-Header.h */,
 				0A37F04721CCC45800829128 /* Assets.bundle */,
 				0A3A93FC2286D59100E50DB1 /* webControl.swift */,
+				09C4BA792546DF550000517E /* WKYTPlayerView.h */,
+				09C4BA7A2546DF550000517E /* WKYTPlayerView.m */,
+				09C4BA802546E0980000517E /* tubeTV-Bridging-Header.h */,
 				0A4D34482302C13000D79FF0 /* versionManager.swift */,
 				0ACA2907235EFF2100AD2153 /* songInfoClass.swift */,
 			);
@@ -159,8 +165,18 @@
 				0AA53B1B23A10EDF00124B5F /* GoogleMobileAds.framework */,
 				0AA53B1923A10ED300124B5F /* GoogleAppMeasurement.framework */,
 				0A53C4D7236ACD0C00D9B6CF /* CloudKit.framework */,
+				5FF008448A02E539ECB3AAD5 /* Pods_MusicTube.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A46B8951B06B70A96AEB553D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EE866340DEBA4DECAC2EE60B /* Pods-MusicTube.debug.xcconfig */,
+				E2E93ABB815B6579DCECD171 /* Pods-MusicTube.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,9 +186,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A3CD4F921CA852300B1CAB4 /* Build configuration list for PBXNativeTarget "MusicTube" */;
 			buildPhases = (
+				4F74DCD75FA0C8FF6AE5E2EB /* [CP] Check Pods Manifest.lock */,
 				0A3CD4E021CA852200B1CAB4 /* Sources */,
 				0A3CD4E121CA852200B1CAB4 /* Frameworks */,
 				0A3CD4E221CA852200B1CAB4 /* Resources */,
+				AF23E0AFC753D50C3F67457A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -254,6 +272,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4F74DCD75FA0C8FF6AE5E2EB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MusicTube-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AF23E0AFC753D50C3F67457A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MusicTube/Pods-MusicTube-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MusicTube/Pods-MusicTube-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MusicTube/Pods-MusicTube-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0A3CD4E021CA852200B1CAB4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -266,7 +326,7 @@
 				0A4651DE22F57E0E0037C8D2 /* songViewList.swift in Sources */,
 				0A68DF5B22ED3C00001F5285 /* favoriteView.swift in Sources */,
 				0A3CD4F021CA852200B1CAB4 /* tubeTV.xcdatamodeld in Sources */,
-				0A37F04321CCC03800829128 /* YTPlayerView.m in Sources */,
+				09C4BA7B2546DF550000517E /* WKYTPlayerView.m in Sources */,
 				0A3F38A722DC7E6100DC77FF /* singerView.swift in Sources */,
 				0ACA2908235EFF2100AD2153 /* songInfoClass.swift in Sources */,
 				0A3CD4E821CA852200B1CAB4 /* AppDelegate.swift in Sources */,
@@ -415,13 +475,14 @@
 		};
 		0A3CD4FA21CA852300B1CAB4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE866340DEBA4DECAC2EE60B /* Pods-MusicTube.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tubeTV/tubeTV.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 2X49Y8FTV3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -446,13 +507,14 @@
 		};
 		0A3CD4FB21CA852300B1CAB4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2E93ABB815B6579DCECD171 /* Pods-MusicTube.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tubeTV/tubeTV.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 2X49Y8FTV3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -40,12 +40,17 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         
         var arr = [Dictionary<String, String>]()
         for check in coreDataQuery(){
+            //add sentence 20201020
+            var sentence = ""
+            if check.sentence != nil{ sentence = check.sentence! }
             var dic = [String : String]()
             dic["videoId"] = check.videoId!
             dic["title"] = check.title!
             dic["time"] = check.time!
             dic["lyric"] = check.lyric!
             dic["imageURL"] = check.imageURL!
+            //add sentence 20201020
+            dic["sentence"] = sentence
             arr.append(dic)
         }
         
@@ -65,7 +70,6 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         super.viewDidLoad()
         readCoreData()
         loadSingerSong(conds: "\(sex_flg)")
-        
         
     }
     
@@ -208,14 +212,18 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let time = songSectionSet[section][row].time!
         let lyric = songSectionSet[section][row].lyric!
         let imageURL = songSectionSet[section][row].imageURL!
+        //add sentence 20201020
+        let sentence = songSectionSet[section][row].sentence!
         if sender.titleLabel?.text == "💛"{
             sender.setTitle("❤️", for: .normal)
-            coreDataSaveDelete(checkSaveDelete: "S", videoId: videoId, title: title, time: time, lyric: lyric, imageURL: imageURL)
+            //add sentence 20201020
+            coreDataSaveDelete(checkSaveDelete: "S", videoId: videoId, title: title, time: time, lyric: lyric, imageURL: imageURL, sentence: sentence)
             songSectionSet[section][row].buttonTitle = "❤️"
             readCoreData()
         }else{
             sender.setTitle("💛", for: .normal)
-            coreDataSaveDelete(checkSaveDelete: "D", videoId: videoId, title: title, time: time, lyric: lyric, imageURL: imageURL)
+            //add sentence 20201020
+            coreDataSaveDelete(checkSaveDelete: "D", videoId: videoId, title: title, time: time, lyric: lyric, imageURL: imageURL, sentence: sentence)
             songSectionSet[section][row].buttonTitle = "💛"
             readCoreData()
         }
@@ -266,7 +274,9 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         
         operation.recordFetchedBlock = {(records:CKRecord?) in
             guard let record = records else { return }
-            let data = songInfo(videoId: record["videoId"] as! String, title: record["title"] as! String, lyric: record["lyric"] as! String, imageURL: record["imageURL"] as! String, time: record["time"] as! String, singerId: record["singerId"] as! String, singerName: record["singerName"] as! String, sex_flg: record["sex_flg"] as! String, keyinDate: record["keyinDate"] as! String, buttonTitle: "")
+            var sen = ""
+            if record["sentence"] != nil{ sen = record["sentence"] as! String }
+            let data = songInfo(videoId: record["videoId"] as! String, title: record["title"] as! String, lyric: record["lyric"] as! String, imageURL: record["imageURL"] as! String, time: record["time"] as! String, singerId: record["singerId"] as! String, singerName: record["singerName"] as! String, sex_flg: record["sex_flg"] as! String, keyinDate: record["keyinDate"] as! String, buttonTitle: "", sentence: sen)
             var checkIf = false
             var count = 0
             var checkButton = false
@@ -289,7 +299,6 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
                 button.append("1")
                 set.append([data])
             }
-            
             
             
             var countSet = 0
@@ -335,6 +344,7 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
                 self.songTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 self.activityIndicatorView(flg: "end")
             }
+            
         }
         database.add(operation)
     }
@@ -377,12 +387,17 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         //讀取用戶歌曲數據
         var core = coreDataQuery()
         for check in core{
+            //add sentence 20201020
+            var sentence = ""
+            if check.sentence != nil{ sentence = check.sentence! }
             var dic = [String : String]()
             dic["videoId"] = check.videoId!
             dic["title"] = check.title!
             dic["time"] = check.time!
             dic["lyric"] = check.lyric!
             dic["imageURL"] = check.imageURL!
+            //add sentence 20201020
+            dic["sentence"] = sentence
             favorite.append(dic)
         }; core.removeAll()
     }

@@ -95,7 +95,7 @@ class favoriteView: UIViewController,UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let like = favorite[indexPath.row]
-        let data = songInfo(videoId: like["videoId"]!, title: like["title"]!, lyric: like["lyric"]!, imageURL: like["imageURL"]!, time: like["time"]!, singerId: "", singerName: "", sex_flg: "", keyinDate: "", buttonTitle: "❤️")
+        let data = songInfo(videoId: like["videoId"]!, title: like["title"]!, lyric: like["lyric"]!, imageURL: like["imageURL"]!, time: like["time"]!, singerId: "", singerName: "", sex_flg: "", keyinDate: "", buttonTitle: "❤️", sentence: like["sentence"]!)
         performSegue(withIdentifier: "favoriteToPlaySegue", sender: data)
     }
     
@@ -120,7 +120,8 @@ class favoriteView: UIViewController,UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let favoriteData = favorite[indexPath.row]
         let delete = UITableViewRowAction(style: .normal, title: "削除") { (action, index) in
-            coreDataSaveDelete(checkSaveDelete: "D", videoId: favoriteData["videoId"]!, title: "", time: "", lyric: "", imageURL: "")
+            // modify 20201020
+            coreDataSaveDelete(checkSaveDelete: "D", videoId: favoriteData["videoId"]!, title: "", time: "", lyric: "", imageURL: "", sentence: "")
             self.favorite.remove(at: indexPath.row)
             self.favoriteTableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.middle)
         }
@@ -133,12 +134,17 @@ class favoriteView: UIViewController,UITableViewDelegate,UITableViewDataSource{
         favorite.removeAll()
         var core = coreDataQuery()
         for check in core{
+            //add sentence 20201020
+            var sentence = ""
+            if check.sentence != nil{ sentence = check.sentence! }
             var dic = [String : String]()
             dic["videoId"] = check.videoId!
             dic["title"] = check.title!
             dic["time"] = check.time!
             dic["lyric"] = check.lyric!
             dic["imageURL"] = check.imageURL!
+            //add sentence 20201020
+            dic["sentence"] = sentence
             favorite.append(dic)
             DispatchQueue.main.async { self.favoriteTableView.reloadData() }
         }

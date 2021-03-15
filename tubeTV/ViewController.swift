@@ -10,11 +10,22 @@ import UIKit
 import WebKit
 import AVFoundation
 import MediaPlayer
+import SnapKit
 
-class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,UITableViewDataSource {
+class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,WKYTPlayerViewDelegate {
     
-    @IBOutlet weak var myWebView: YTPlayerView!
+    @IBOutlet weak var myWebView: WKYTPlayerView!
     @IBOutlet weak var lyricTableView: UITableView!
+    @IBOutlet weak var lyricBaseView: UIView!
+    
+    
+    @IBOutlet weak var baseView: UIView!
+    @IBOutlet weak var sentenceLabel: UILabel!
+    @IBOutlet weak var grammarLabel: UILabel!
+    @IBOutlet weak var exampleLabel: UILabel!
+    
+    
+    
     @IBOutlet weak var timeSlider: UISlider!
     
     @IBOutlet weak var startTime: UILabel!
@@ -30,6 +41,8 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
     @IBOutlet weak var playPauseView: UIView!
     @IBOutlet weak var isRepeatView: UIView!
     @IBOutlet weak var favoriteButton: UIButton!
+    
+    
     
     let playerVars = [
         "playsinline" : 1,
@@ -47,6 +60,7 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
     
     var keyId = ""
     var arrIndex = [String]()
+    var arrSentenceIndex = [String]()
     
     var favorite = [Dictionary<String, String>]()
     var isRepeat = ""
@@ -61,13 +75,36 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
     var videoIdList = [String]()
     //這首歌的順位
     var countOrder = 0
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
         setLockView()
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(recognizer:)))
+        pan.maximumNumberOfTouches = 1
+        lyricBaseView.addGestureRecognizer(pan)
+        
+        
         guard let thisSongInfo = thisSongInfo else { return }
         keyId = thisSongInfo.videoId!
         arrIndex = thisSongInfo.lyric!.components(separatedBy: "|")
+        
+        
+        arrSentenceIndex = thisSongInfo.sentence!.components(separatedBy: "|")
+        if arrSentenceIndex.count == 1 {
+            sentenceLabel.text = "Comming soon"
+            grammarLabel.text = "Comming soon"
+            exampleLabel.text = "Comming soon"
+        }else{
+            let sentence = arrSentenceIndex[1].components(separatedBy: "_")
+            let grammar = arrSentenceIndex[2].components(separatedBy: "_")
+            let example = arrSentenceIndex[3].components(separatedBy: "_")
+            sentenceLabel.text = sentence[0] + "\n" + sentence[1] + "\n" + sentence[2]
+            grammarLabel.text = grammar[0] + "\n" + grammar[1]
+            exampleLabel.text = example[0] + "\n" + example[1] + "\n" + example[2]
+        }
         
         //放入清單&
         //帶過來的我的最愛清單中，這首是第幾首
@@ -102,14 +139,40 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
         startTime.text = "0:00"
         endTime.text = thisSongInfo.time!
         
+        let baseViewDic = 0 - view.frame.maxY + baseView.frame.midY
+        print(baseViewDic,"chu")
+        lyricBaseView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(view.snp.right).offset(-30)
+            make.centerY.equalTo(view.snp.bottom).offset(baseViewDic)
+            make.height.equalTo(100)
+            make.width.equalTo(50)
+        }
+        
+    }
+    
+    //pull
+    @objc func pan(recognizer:UIPanGestureRecognizer){
+        let point = recognizer.location(in: self.view)
+        //lyricTableView.center = point
+        
+        let rightX = 0 - (view.frame.size.width - point.x)
+        let topY = 0 - (view.frame.size.height - point.y)
+        lyricBaseView.snp.updateConstraints { (make) in
+            make.centerX.equalTo(view.snp.right).offset(rightX)
+            make.centerY.equalTo(view.snp.bottom).offset(topY)
+        }
+        print(lyricBaseView.center)
+        print("\(rightX), \(topY)")
+        
     }
     
     
     func play(webURL:String){
         myWebView.load(withVideoId: webURL, playerVars: playerVars)
+        
     }
     
-    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+    func playerViewDidBecomeReady(_ playerView: WKYTPlayerView) {
         myWebView.playVideo()
     }
     
@@ -117,6 +180,7 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
     var setBufferingPlay = 0
     var screenBrightness = UIScreen.main.brightness
     @objc func playInBackground(){
+        print("test20201027")
         setPlay = 1
         setBufferingPlay = 1
         setInfoCenterCredentials(rate: 0)
@@ -127,35 +191,48 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
         
     }
     
-    func playerView(_ playerView: YTPlayerView, didChangeTo state: YTPlayerState) {
+    func playerView(_ playerView: WKYTPlayerView, didChangeTo state: WKYTPlayerState) {
         switch(state) {
-        case YTPlayerState.playing:
+        case WKYTPlayerState.playing:
             print("Video playing")
             playPauseButton.setImage(UIImage(named:"pause")!, for: .normal)
             setInfoCenterCredentials(rate: 1)
             //後台按上下一首設定為1，若沒跳出ＣＭ，播放音樂則設回0
             checkBackCMCome = 0
+            
             timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true, block: { (Timer) in
                 MusicTube.selectLyric(playLyric: self.arrIndex, myWebView: self.myWebView, lyricTableView: self.lyricTableView)
+                //self.lyricTableView.center = self.pullPoint
                 
-                let perOfTime = self.myWebView.currentTime() / Float(timeToNum(time: self.endTime.text!))
-                self.timeSlider.setValue(perOfTime, animated: true)
-                self.startTime.text = numToTime(num: Int(self.myWebView.currentTime()))
+                //modify in 20201025 start
+                self.myWebView.getCurrentTime { (floatValue, error) in
+                    if error == nil{
+                        let perOfTime = floatValue / Float(timeToNum(time: self.endTime.text!))
+                        self.timeSlider.setValue(perOfTime, animated: true)
+                        self.startTime.text = numToTime(num: Int(floatValue))
+                    }else{
+                        self.startTime.text = "0:00"
+                    }
+                }
+                //modify in 20201025 end
+                
             })
             //在後台按暫停跳到前台時，會直接播放（此問題有待解決），所以判斷是否停這設為0
             letStopInBack = 0
          
-        case YTPlayerState.paused:
+        case WKYTPlayerState.paused:
             print("Video paused")
             playPauseButton.setImage(UIImage(named:"play")!, for: .normal)
             setInfoCenterCredentials(rate: 0)
             if timer != nil{ timer!.invalidate() }
+            print("01",setPlay,letStopInBack)
             //進入背景後
             if setPlay == 1 && letStopInBack == 0{
+                print("02")
                 myWebView.playVideo()
-                setPlay = 0
+                //setPlay = 0
             }
-        case YTPlayerState.unstarted:
+        case WKYTPlayerState.unstarted:
             print("Video unstarted")
             setInfoCenterCredentials(rate: 0)
             //在後台第二首開始不會執行ended所以用此判斷
@@ -174,18 +251,18 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
             }else{
                 playPauseButton.setImage(UIImage(named:"play")!, for: .normal)
             }
-        case YTPlayerState.queued:
+        case WKYTPlayerState.queued:
             print("Video queued")
             playPauseButton.setImage(UIImage(named:"play")!, for: .normal)
             setInfoCenterCredentials(rate: 0)
-        case YTPlayerState.buffering:
+        case WKYTPlayerState.buffering:
             //直接黑頻後台時，如果setBufferingPlay是1時
             if setBufferingPlay == 1{
                 myWebView.playVideo();setBufferingPlay = 0
             }
             print("Video buffering")
             setInfoCenterCredentials(rate: 0)
-        case YTPlayerState.ended:
+        case WKYTPlayerState.ended:
             print("Video ended")
             if checkRepeat == "1"{
                 myWebView.playVideo()
@@ -223,21 +300,33 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
         startTime.text = numOfTime
     }
     
+    
     //如果零的話，進背景後就不會是停的
     var letStopInBack = 0
     @IBAction func play_pause(_ sender: UIButton) {
         let image1:UIImage = UIImage(named:"pause")!
         let image2:UIImage = UIImage(named:"play")!
-        if myWebView.playerState() == YTPlayerState.playing{
-            sender.setImage(image2, for: .normal)
-            myWebView.pauseVideo()
-        }else if myWebView.playerState() == YTPlayerState.paused{
-            sender.setImage(image1, for: .normal)
-            myWebView.playVideo()
-        }else if myWebView.playerState() == YTPlayerState.queued{
-            sender.setImage(image1, for: .normal)
-            myWebView.playVideo()
+        
+        //modify in 20201025 start
+        myWebView.getPlayerState { [self] (state, error) in
+            if error == nil{
+                if state == WKYTPlayerState.playing{
+                    sender.setImage(image2, for: .normal)
+                    self.myWebView.pauseVideo()
+                }else if state == WKYTPlayerState.paused{
+                    sender.setImage(image1, for: .normal)
+                    self.myWebView.playVideo()
+                }else if state == WKYTPlayerState.queued{
+                    sender.setImage(image1, for: .normal)
+                    self.myWebView.playVideo()
+                }
+            }else{
+                sender.setImage(image2, for: .normal)
+                self.myWebView.stopVideo()
+            }
         }
+        //modify in 20201025 end
+        
         if letStopInBack == 0{ letStopInBack = 1 }
         else{ letStopInBack = 0 }
     }
@@ -267,10 +356,12 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
         guard let thisSongInfo = thisSongInfo else { return }
         if favoriteButton.titleLabel?.text == "💛"{
             favoriteButton.setTitle("❤️", for: .normal)
-            coreDataSaveDelete(checkSaveDelete: "S", videoId: thisSongInfo.videoId!, title: thisSongInfo.title!, time: thisSongInfo.time!, lyric: thisSongInfo.lyric!, imageURL: thisSongInfo.imageURL!)
+            // modify 20201020
+            coreDataSaveDelete(checkSaveDelete: "S", videoId: thisSongInfo.videoId!, title: thisSongInfo.title!, time: thisSongInfo.time!, lyric: thisSongInfo.lyric!, imageURL: thisSongInfo.imageURL!, sentence: thisSongInfo.sentence!)
         }else{
             favoriteButton.setTitle("💛", for: .normal)
-            coreDataSaveDelete(checkSaveDelete: "D", videoId: thisSongInfo.videoId!, title: thisSongInfo.title!, time: thisSongInfo.time!, lyric: thisSongInfo.lyric!, imageURL: thisSongInfo.imageURL!)
+            // modify 20201020
+            coreDataSaveDelete(checkSaveDelete: "D", videoId: thisSongInfo.videoId!, title: thisSongInfo.title!, time: thisSongInfo.time!, lyric: thisSongInfo.lyric!, imageURL: thisSongInfo.imageURL!, sentence: thisSongInfo.sentence!)
         }
         
     }
@@ -285,29 +376,42 @@ class ViewController: UIViewController,YTPlayerViewDelegate,UITableViewDelegate,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let selectedCellView = UIView()
         selectedCellView.backgroundColor = UIColor.darkGray
-        
+            
         let cell = lyricTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
+            
         cell.selectedBackgroundView = selectedCellView
         tableView.separatorColor = UIColor.clear
-        
+            
         guard let textLabel = cell.contentView.subviews[0] as? UILabel else { return cell }
-        textLabel.text = String(arrIndex[indexPath.row].components(separatedBy: "_")[1]) + "\n"
-            + String(arrIndex[indexPath.row].components(separatedBy: "_")[2])
+        
+        var forLabel = [String]()
+        var checkNum = 0
+        for check in arrIndex{
+            forLabel.append("")
+            for check2 in arrSentenceIndex[0].components(separatedBy: " "){
+                if check.components(separatedBy: "_")[0] == check2{ forLabel[checkNum] = "🔵"; break
+                }
+            }
+            if forLabel[checkNum] == ""{ forLabel[checkNum] = "⚪" }
+            checkNum += 1
+        }
+        let row = indexPath.row
+        textLabel.text = forLabel[row]
         
         return cell
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if timer != nil{ timer!.invalidate() }
-        
-        
-        clickToSeconds(myWebView: myWebView, arrLyric: arrIndex, indexPath: indexPath)
-        
-        let lyricTime = arrIndex[indexPath.row].components(separatedBy: "_")[0]
-        let perOfTime = Float(lyricTime)! / Float(timeToNum(time: endTime.text!))
-        self.timeSlider.setValue(perOfTime, animated: true)
-        self.startTime.text = numToTime(num: Int(lyricTime)!)
+            if timer != nil{ timer!.invalidate() }
+            
+            
+            clickToSeconds(myWebView: myWebView, arrLyric: arrIndex, indexPath: indexPath)
+            
+            let lyricTime = arrIndex[indexPath.row].components(separatedBy: "_")[0]
+            let perOfTime = Float(lyricTime)! / Float(timeToNum(time: endTime.text!))
+            self.timeSlider.setValue(perOfTime, animated: true)
+            self.startTime.text = numToTime(num: Int(lyricTime)!)
     }
     
     //////////////////////////////tableview 処理/////////////////////////////////////

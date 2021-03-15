@@ -1,0 +1,6 @@
+framework module Pods_MusicTube {
+  umbrella header "Pods-MusicTube-umbrella.h"
+
+  export *
+  module * { export * }
+}

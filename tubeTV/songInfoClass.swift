@@ -19,10 +19,11 @@ class songInfo {
     var sex_flg:String?
     var keyinDate:String?
     var buttonTitle:String?
+    var sentence:String?
     
-    init(videoId:String,title:String,lyric:String,imageURL:String,time:String,
-         singerId:String,singerName:String,sex_flg:String,
-         keyinDate:String,buttonTitle:String) {
+    init(videoId:String,title:String,lyric:String,imageURL:String,
+         time:String,singerId:String,singerName:String,sex_flg:String,
+         keyinDate:String,buttonTitle:String,sentence:String) {
         self.videoId = videoId
         self.title = title
         self.lyric = lyric
@@ -33,6 +34,7 @@ class songInfo {
         self.sex_flg = sex_flg
         self.keyinDate = keyinDate
         self.buttonTitle = buttonTitle
+        self.sentence = sentence
     }
     
     

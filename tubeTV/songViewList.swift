@@ -31,13 +31,45 @@ class songViewList: UIViewController,UITableViewDelegate,UITableViewDataSource {
         initView()
         
     }
+    /*debug
+    func update(videoId:String,sentence:String,flg:String){
+        let database = CKContainer(identifier: "iCloud.CHUWEILUN1.tubeTV").publicCloudDatabase
+        var query:CKQuery?
+        
+        if flg == "S"{ query = CKQuery(recordType: "songInfo", predicate: NSPredicate(value: true)) }
+        else if flg == "female" { query = CKQuery(recordType: "femaleSinger", predicate: NSPredicate(value: true)) }
+        else if flg == "male" { query = CKQuery(recordType: "maleSinger", predicate: NSPredicate(value: true)) }
+        else if flg == "group" { query = CKQuery(recordType: "groupSinger", predicate: NSPredicate(value: true)) }
+        else { query = CKQuery(recordType: "modifyInfo", predicate: NSPredicate(value: true)) }
+        
+        
+        let operation = CKQueryOperation(query: query!)
+        operation.queuePriority = .veryHigh; operation.resultsLimit = 300
+        operation.recordFetchedBlock = {(records:CKRecord?) in
+            guard let record = records else { return }
+            if record["videoId"] as! String == videoId{
+                record["sentence"] = sentence as CKRecordValue
+                //print(record["title"] as! String)
+                database.save(record, completionHandler: { (_, _) in })
+            }
+        }; database.add(operation)
+    }
+    
+    func insertToProductionCore(){
+        var aa = 0
+        for check in coreDataQuery(){
+            //print(check.title)
+            update(videoId: check.videoId!, sentence: check.sentence!, flg: "m")
+        }
+    }
+    debug*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
         messageDisplay()
         
         loadSongFromRecent()
-        
+        //insertToProductionCore()   //debug
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -95,8 +127,6 @@ class songViewList: UIViewController,UITableViewDelegate,UITableViewDataSource {
         }
         channelTitle.text = changeCode(text: songData[row].time!)
         return cell
-        
-        
     }
     
     
@@ -122,7 +152,7 @@ class songViewList: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let arr = ["ハートを押したらお気に入りに追加できる\nもう一回押すとキャンセルできるよ",
                    "曲をスピードアップしてもいいし\nスピードダウンしてもいいよ",
                    "アプリに入ってない興味のある曲があれば\n是非ご連絡下さい",
-                   "歌詞を押したら動画も飛んで行く",
+                   "⚪️🔵を押したら動画も飛んで行く",
                    "お気に入り削除方法その一：\n歌手のハートをもう一度押してみよう",
                    "お気に入り削除方法その二：\nお気に入りのデータを左に滑らせてみよう"]
         timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true, block: { (Timer) in
@@ -157,31 +187,34 @@ class songViewList: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     @objc func loadSongFromRecent(){
-        let Year = Calendar.current.component(.year, from: calculatedDate!)
-        let Month = Calendar.current.component(.month, from: calculatedDate!)
-        let Day = Calendar.current.component(.day, from: calculatedDate!)
-        
         let database = CKContainer.default().publicCloudDatabase
         let query = CKQuery(recordType: "songInfo", predicate: NSPredicate(value: true))
-        query.sortDescriptors = [NSSortDescriptor(key: "singerId", ascending: true),NSSortDescriptor(key: "keyinDate", ascending: true)]
+        //ascending: false -> 新から旧
+        query.sortDescriptors = [NSSortDescriptor(key: "keyinDate", ascending: false)]
         let operation = CKQueryOperation(query: query)
-        operation.queuePriority = .veryHigh; operation.resultsLimit = 300
+        operation.queuePriority = .veryHigh; operation.resultsLimit = 10
         operation.recordFetchedBlock = {(records:CKRecord?) in
             guard let record = records else { return }
-            let keyinDate = record["keyinDate"] as! String
-            let Date_30 = "\(Year)\(dayToDay(day: Month))\(dayToDay(day: Day))"
-            if keyinDate > Date_30 {
-                let data = songInfo(videoId: record["videoId"] as! String, title: record["title"] as! String, lyric: record["lyric"] as! String, imageURL: record["imageURL"] as! String, time: record["time"] as! String, singerId: record["singerId"] as! String, singerName: record["singerName"] as! String, sex_flg: record["sex_flg"] as! String, keyinDate: record["keyinDate"] as! String, buttonTitle: "")
-                self.songData.append(data)
-                
-                DispatchQueue.main.async {
-                    self.songTableView.reloadData()
-                }
-                
+            var sentence = ""
+            if record["sentence"] != nil { sentence = record["sentence"] as! String }
+            let data = songInfo(videoId: record["videoId"] as! String, title: record["title"] as! String, lyric: record["lyric"] as! String, imageURL: record["imageURL"] as! String, time: record["time"] as! String, singerId: record["singerId"] as! String, singerName: record["singerName"] as! String, sex_flg: record["sex_flg"] as! String, keyinDate: record["keyinDate"] as! String, buttonTitle: "", sentence: sentence)
+            self.songData.append(data)
+            
+            DispatchQueue.main.async {
+                self.songTableView.reloadData()
             }
             
         }
         database.add(operation)
+    }
+    
+    
+    func deveToCoredata(){
+        
+        
+        
+        
+        
     }
     
     
