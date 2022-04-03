@@ -180,10 +180,13 @@ class singerView: UIViewController,UITableViewDelegate,UITableViewDataSource {
         
         //讓網路圖片下載時不會卡卡（異步處理）
         DispatchQueue.global().async {
-            let data = NSData.init(contentsOf: NSURL.init(string: self.songSectionSet[indexPath.section][indexPath.row].imageURL!)! as URL)
-            DispatchQueue.main.async {
-                let image = UIImage.init(data: data! as Data)
-                imageView.image = image
+            if let data = NSData.init(contentsOf: NSURL.init(string: self.songSectionSet[indexPath.section][indexPath.row].imageURL!)! as URL) {
+                
+                DispatchQueue.main.async {
+                    let image = UIImage.init(data: data as Data)
+                    imageView.image = image
+                }
+                
             }
         }
         
